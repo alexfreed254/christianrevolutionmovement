@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Media Library{% endblock %}
+{% block content %}
+<section class="media-section">
+  <div class="container">
+    <div class="section-header">
+      <h1>Media Library</h1>
+      <p>Videos, podcasts, and sermons — on demand, in your language.</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="media-filters">
+      <input type="search" id="mediaSearch" placeholder="Search sermons, speakers, series..." />
+      <select id="filterSeries">
+        <option value="">All Series</option>
+        <option>Foundations of Faith</option>
+        <option>Revival Nights</option>
+        <option>Kingdom Vision</option>
+      </select>
+      <select id="filterLang">
+        <option value="">All Languages</option>
+        <option value="en">English</option>
+        <option value="sw">Kiswahili</option>
+        <option value="fr">Français</option>
+        <option value="pt">Português</option>
+      </select>
+      <select id="filterType">
+        <option value="">All Types</option>
+        <option value="video">Video</option>
+        <option value="audio">Audio</option>
+        <option value="podcast">Podcast</option>
+      </select>
+    </div>
+
+    <!-- Continue Watching -->
+    <div class="media-block">
+      <h2>▶ Continue Watching</h2>
+      <div class="media-grid" id="continueGrid">
+        <div class="media-card">
+          <div class="media-thumb" style="background: linear-gradient(135deg, #8B7FC7, #2a1f4d)">
+            <div class="media-play">▶</div>
+            <div class="media-progress"><div style="width: 65%"></div></div>
+          </div>
+          <div class="media-info">
+            <h4>Walking in Authority — Part 2</h4>
+            <p>Pastor Main • 42 min remaining</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Latest Sermons -->
+    <div class="media-block">
+      <h2>Latest Sermons</h2>
+      <div class="media-grid" id="sermonGrid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- Podcasts -->
+    <div class="media-block">
+      <h2>🎧 Podcasts</h2>
+      <div class="podcast-list" id="podcastList">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+// Sample media data (in production, fetched from /api/media)
+const sermons = [
+  {title: "The Undiluted Gospel", speaker: "Pastor Main", series: "Foundations", duration: "52 min", lang: "en", type: "video"},
+  {title: "Revival in Our Time", speaker: "Apostle K.", series: "Revival Nights", duration: "1h 10m", lang: "en", type: "video"},
+  {title: "Injili Iliyosafishwa", speaker: "Mchungaji J.", series: "Msingi", duration: "48 min", lang: "sw", type: "video"},
+  {title: "Walking in Authority", speaker: "Pastor Main", series: "Kingdom Vision", duration: "55 min", lang: "en", type: "video"},
+  {title: "L'Évangile Pur", speaker: "Pasteur M.", series: "Fondements", duration: "50 min", lang: "fr", type: "video"},
+  {title: "Prayer That Moves Nations", speaker: "Apostle K.", series: "Revival Nights", duration: "45 min", lang: "en", type: "audio"}
+];
+
+function renderSermons() {
+  const grid = document.getElementById('sermonGrid');
+  grid.innerHTML = sermons.map(s => `
+    <div class="media-card">
+      <div class="media-thumb" style="background: linear-gradient(135deg, #8B7FC7, #2a1f4d)">
+        <div class="media-play">▶</div>
+        <span class="media-lang">${s.lang.toUpperCase()}</span>
+      </div>
+      <div class="media-info">
+        <h4>${s.title}</h4>
+        <p>${s.speaker} • ${s.duration}</p>
+        <div class="media-tags"><span>${s.series}</span><span>${s.type}</span></div>
+      </div>
+    </div>
+  `).join('');
+}
+renderSermons();
+</script>
+{% endblock %}

@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block title %}Give{% endblock %}
+{% block content %}
+<section class="give-section">
+  <div class="container">
+    <div class="section-header">
+      <h1>Give Generously</h1>
+      <p>Your giving advances the gospel to the nations.</p>
+    </div>
+
+    <div class="give-layout">
+      <!-- Giving Form -->
+      <div class="give-form shield-card">
+        <h2>Make a Gift</h2>
+
+        <!-- Amount -->
+        <div class="amount-grid">
+          <button class="amount-btn" data-amount="10">$10</button>
+          <button class="amount-btn" data-amount="25">$25</button>
+          <button class="amount-btn" data-amount="50">$50</button>
+          <button class="amount-btn" data-amount="100">$100</button>
+          <button class="amount-btn" data-amount="500">$500</button>
+          <button class="amount-btn" data-amount="1000">$1000</button>
+        </div>
+        <div class="form-group">
+          <label>Custom Amount</label>
+          <div class="amount-input">
+            <select id="currency">
+              <option>USD</option><option>EUR</option><option>GBP</option>
+              <option>KES</option><option>NGN</option><option>ZAR</option>
+              <option>BRL</option><option>INR</option>
+            </select>
+            <input type="number" id="amount" min="1" placeholder="0.00" />
+          </div>
+        </div>
+
+        <!-- Category -->
+        <div class="form-group">
+          <label>Designate Your Gift</label>
+          <select id="category">
+            <option value="tithe">💜 Tithe</option>
+            <option value="offering">🎁 Offering</option>
+            <option value="missions">🌍 Missions</option>
+            <option value="welfare">🤝 Welfare</option>
+            <option value="building">🏛 Building Fund</option>
+          </select>
+        </div>
+
+        <!-- Frequency -->
+        <div class="form-group">
+          <label>Frequency</label>
+          <div class="freq-toggle">
+            <button class="freq-btn active" data-freq="once">One-Time</button>
+            <button class="freq-btn" data-freq="weekly">Weekly</button>
+            <button class="freq-btn" data-freq="monthly">Monthly</button>
+          </div>
+        </div>
+
+        <!-- Payment Method -->
+        <div class="form-group">
+          <label>Payment Method</label>
+          <div class="payment-methods">
+            <button class="pay-btn active" data-method="card">💳 Card</button>
+            <button class="pay-btn" data-method="mpesa">📱 M-Pesa</button>
+            <button class="pay-btn" data-method="paypal">🅿️ PayPal</button>
+            <button class="pay-btn" data-method="bank">🏦 Bank</button>
+          </div>
+        </div>
+
+        <div id="paymentDetails">
+          <!-- Card details injected here -->
+        </div>
+
+        <button class="btn btn-primary btn-block btn-lg" id="giveBtn">
+          Give Now
+        </button>
+        <p class="give-note">🔒 Secure, PCI-DSS compliant. Tax receipt auto-generated.</p>
+      </div>
+
+      <!-- Campaigns -->
+      <div class="give-sidebar">
+        <div class="campaign-card shield-card">
+          <h3>🏛 Temple of Nations — Building Fund</h3>
+          <div class="progress-bar"><div style="width: 68%"></div></div>
+          <p><strong>$6.8M</strong> of $10M goal</p>
+        </div>
+        <div class="campaign-card shield-card">
+          <h3>🌍 2033 Mission Push</h3>
+          <div class="progress-bar"><div style="width: 42%"></div></div>
+          <p><strong>$4.2M</strong> of $10M goal</p>
+        </div>
+        <div class="campaign-card shield-card">
+          <h3>🤝 Welfare & Orphan Care</h3>
+          <div class="progress-bar"><div style="width: 85%"></div></div>
+          <p><strong>$850K</strong> of $1M goal</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+// Amount buttons
+document.querySelectorAll('.amount-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('amount').value = btn.dataset.amount;
+  });
+});
+// Frequency
+document.querySelectorAll('.freq-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.freq-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+// Payment methods
+document.querySelectorAll('.pay-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.pay-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const method = btn.dataset.method;
+    const details = document.getElementById('paymentDetails');
+    if (method === 'card') {
+      details.innerHTML = `
+        <div class="form-group"><label>Card Number</label><input type="text" placeholder="4242 4242 4242 4242" /></div>
+        <div class="form-row two">
+          <div class="form-group"><label>Expiry</label><input type="text" placeholder="MM/YY" /></div>
+          <div class="form-group"><label>CVC</label><input type="text" placeholder="123" /></div>
+        </div>`;
+    } else if (method === 'mpesa') {
+      details.innerHTML = `<div class="form-group"><label>M-Pesa Phone</label><input type="tel" placeholder="+254..." /></div>`;
+    } else if (method === 'paypal') {
+      details.innerHTML = `<p class="pay-note">You'll be redirected to PayPal to complete your gift.</p>`;
+    } else {
+      details.innerHTML = `<p class="pay-note">Bank transfer details will be emailed to you.</p>`;
+    }
+  });
+});
+// Give button
+document.getElementById('giveBtn').addEventListener('click', async () => {
+  const amount = document.getElementById('amount').value;
+  if (!amount) { alert('Please enter an amount'); return; }
+  alert(`Thank you! Your gift of ${document.getElementById('currency').value} ${amount} is being processed. Receipt will be emailed.`);
+});
+</script>
+{% endblock %}

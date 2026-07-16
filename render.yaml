@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: crm-central-command
+    env: python
+    plan: standard
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+    healthCheckPath: /api/health

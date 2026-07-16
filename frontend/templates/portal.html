@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}My Portal{% endblock %}
+{% block content %}
+<section class="portal-section">
+  <div class="container">
+    <div class="portal-header">
+      <h1>Welcome, {{ member.full_name }}</h1>
+      <p class="portal-id">Your Unique ID: <strong>{{ member.unique_id }}</strong></p>
+    </div>
+
+    <!-- Digital ID Card -->
+    <div class="id-card shield-card">
+      <div class="id-card-inner">
+        <div class="id-card-left">
+          <div class="id-logo">✟</div>
+          <div class="id-name">{{ member.full_name }}</div>
+          <div class="id-unique">{{ member.unique_id }}</div>
+          <div class="id-location">{{ member.city }}, {{ member.country }}</div>
+        </div>
+        <div class="id-card-right">
+          <div class="id-stage">{{ member.growth_stage | upper }}</div>
+          <div class="id-score">
+            <span class="score-num">{{ member.engagement_score }}</span>
+            <span class="score-label">Engagement</span>
+          </div>
+          <div class="id-streak">🔥 {{ member.streak }} week streak</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="portal-stats">
+      <div class="stat-card">
+        <div class="stat-icon">📺</div>
+        <div class="stat-value">{{ attendance | length }}</div>
+        <div class="stat-label">Services Attended (recent)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">💜</div>
+        <div class="stat-value">{{ giving | length }}</div>
+        <div class="stat-label">Giving Records</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-value">{{ member.streak }}</div>
+        <div class="stat-label">Week Streak</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-value">{{ member.engagement_score }}</div>
+        <div class="stat-label">Total Score</div>
+      </div>
+    </div>
+
+    <!-- Growth Track -->
+    <div class="portal-block">
+      <h2>Your Growth Track</h2>
+      <div class="growth-progress">
+        {% set stages = ['new_believer', 'foundations', 'discipleship', 'leadership', 'sent'] %}
+        {% set current_idx = stages.index(member.growth_stage) if member.growth_stage in stages else 0 %}
+        {% for stage in stages %}
+          <div class="gp-step {{ 'active' if loop.index0 <= current_idx else '' }} {{ 'current' if loop.index0 == current_idx else '' }}">
+            <div class="gp-dot">{{ loop.index }}</div>
+            <div class="gp-label">{{ stage | replace('_', ' ') | title }}</div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Attendance History -->
+    <div class="portal-block">
+      <h2>Recent Attendance</h2>
+      <div class="data-table">
+        <table>
+          <thead><tr><th>Date</th><th>Service</th><th>Mode</th></tr></thead>
+          <tbody>
+            {% for a in attendance %}
+            <tr>
+              <td>{{ a.attended_at[:10] }}</td>
+              <td>{{ a.service_type | title }}</td>
+              <td>{{ a.mode | title }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="3">No attendance yet. <a href="/live">Watch a service</a></td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Giving History -->
+    <div class="portal-block">
+      <h2>Giving History</h2>
+      <div class="data-table">
+        <table>
+          <thead><tr><th>Date</th><th>Amount</th><th>Category</th><th>Receipt</th></tr></thead>
+          <tbody>
+            {% for g in giving %}
+            <tr>
+              <td>{{ g.created_at[:10] }}</td>
+              <td>{{ g.currency }} {{ "%.2f" | format(g.amount) }}</td>
+              <td>{{ g.category | title }}</td>
+              <td><code>{{ g.receipt_id }}</code></td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4">No giving records yet. <a href="/give">Give now</a></td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

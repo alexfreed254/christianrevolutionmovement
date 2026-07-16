@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Admin — Central Command{% endblock %}
+{% block content %}
+<section class="admin-section">
+  <div class="container">
+    <div class="admin-header">
+      <h1>⚙ Central Command</h1>
+      <p>Admin Dashboard</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="admin-stats">
+      <div class="admin-stat">
+        <div class="stat-value">{{ stats.total_members }}</div>
+        <div class="stat-label">Total Members</div>
+      </div>
+      <div class="admin-stat">
+        <div class="stat-value">{{ stats.active_today }}</div>
+        <div class="stat-label">Active Today</div>
+      </div>
+      <div class="admin-stat">
+        <div class="stat-value">184</div>
+        <div class="stat-label">Nations Reached</div>
+      </div>
+      <div class="admin-stat">
+        <div class="stat-value">$2.4M</div>
+        <div class="stat-label">Giving (MTD)</div>
+      </div>
+    </div>
+
+    <!-- Follow-up Queue -->
+    <div class="admin-block">
+      <h2>📞 Follow-Up Queue</h2>
+      <p class="admin-note">Members who missed 2+ consecutive services — assigned to local shepherds.</p>
+      <div class="data-table">
+        <table>
+          <thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Last Seen</th><th>Action</th></tr></thead>
+          <tbody id="followupBody">
+            <tr><td colspan="5">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Members Table -->
+    <div class="admin-block">
+      <h2>👥 Members (Scoped to Your Region)</h2>
+      <div class="data-table">
+        <table>
+          <thead><tr><th>Unique ID</th><th>Name</th><th>City</th><th>Stage</th><th>Score</th></tr></thead>
+          <tbody id="membersBody">
+            <tr><td colspan="5">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+async function loadAdmin() {
+  try {
+    const [members, followup] = await Promise.all([
+      fetch('/api/admin/members').then(r => r.json()),
+      fetch('/api/admin/followup-queue').then(r => r.json())
+    ]);
+    document.getElementById('membersBody').innerHTML = members.map(m => `
+      <tr>
+        <td><code>${m.unique_id}</code></td>
+        <td>${m.full_name}</td>
+        <td>${m.city}</td>
+        <td>${m.growth_stage}</td>
+        <td>${m.engagement_score}</td>
+      </tr>
+    `).join('') || '<tr><td colspan="5">No members in scope</td></tr>';
+    document.getElementById('followupBody').innerHTML = followup.map(m => `
+      <tr>
+        <td>${m.full_name}</td>
+        <td>${m.phone}</td>
+        <td>${m.email}</td>
+        <td>${(m.last_seen || '').slice(0,10)}</td>
+        <td><button class="btn btn-outline btn-sm">Assign</button></td>
+      </tr>
+    `).join('') || '<tr><td colspan="5">No follow-ups needed 🎉</td></tr>';
+  } catch (e) { console.error(e); }
+}
+loadAdmin();
+</script>
+{% endblock %}

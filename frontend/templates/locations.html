@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block title %}Find a Location{% endblock %}
+{% block content %}
+<section class="locations-section">
+  <div class="container">
+    <div class="section-header">
+      <h1>Find a Location</h1>
+      <p>From global hubs to city assemblies — find your spiritual home.</p>
+    </div>
+
+    <!-- Continent Filter -->
+    <div class="continent-tabs">
+      <button class="cont-tab active" data-cont="all">🌍 Global</button>
+      <button class="cont-tab" data-cont="Africa">Africa</button>
+      <button class="cont-tab" data-cont="Americas">Americas</button>
+      <button class="cont-tab" data-cont="Europe">Europe</button>
+      <button class="cont-tab" data-cont="Asia">Asia</button>
+      <button class="cont-tab" data-cont="Australia">Australia</button>
+    </div>
+
+    <!-- Locations Grid -->
+    <div class="locations-grid" id="locationsGrid">
+      <!-- Africa -->
+      <div class="location-card" data-cont="Africa">
+        <div class="loc-flag">🇰🇪</div>
+        <h3>Kenya</h3>
+        <p class="loc-hub">Continental Hub — East Africa</p>
+        <div class="loc-cities">
+          <span>Nairobi</span><span>Mombasa</span><span>Eldoret</span><span>Nakuru</span><span>Kisumu</span>
+        </div>
+        <a href="#" class="btn btn-outline">View Assemblies</a>
+      </div>
+      <div class="location-card" data-cont="Africa">
+        <div class="loc-flag">🇳🇬</div>
+        <h3>Nigeria</h3>
+        <p class="loc-hub">National Hub — West Africa</p>
+        <div class="loc-cities">
+          <span>Lagos</span><span>Abuja</span><span>Port Harcourt</span><span>Kano</span>
+        </div>
+        <a href="#" class="btn btn-outline">View Assemblies</a>
+      </div>
+      <div class="location-card" data-cont="Africa">
+        <div class="loc-flag">🇿🇦</div>
+        <h3>South Africa</h3>
+        <p class="loc-hub">National Hub — Southern Africa</p>
+        <div class="loc-cities">
+          <span>Johannesburg</span><span>Cape Town</span><span>Durban</span>
+        </div>
+        <a href="#" class="btn btn-outline">View Assemblies</a>
+      </div>
+      <div class="location-card" data-cont="Africa">
+        <div class="loc-flag">🇨🇩</div>
+        <h3>DRC</h3>
+        <p class="loc-hub">National Hub — Central Africa</p>
+        <div class="loc-cities"><span>Kinshasa</span><span>Lubumbashi</span></div>
+        <a href="#" class="btn btn-outline">View Assemblies</a>
+      </div>
+      <!-- Americas -->
+      <div class="location-card" data-cont="Americas">
+        <div class="loc-flag">🇺🇸</div>
+        <h3>United States</h3>
+        <p class="loc-hub">Continental Hub — North America</p>
+        <div class="loc-cities"><span>Houston</span><span>Atlanta</span><span>NYC</span><span>LA</span></div>
+        <a href="#" class="btn btn-outline">View Assemblies</a>
+      </div>
+      <div class="location-card" data-cont="Americas">
+        <div class="loc-flag">🇧🇷</div>
+        <h3>Brazil</h3>
+        <p class="loc-hub">National Hub — South America</p>
+        <div class="loc-cities"><span>São Paulo</span><span>Rio</span><span>Brasília</span></div>
+        <a href="#" class="btn btn-outline">View Assemblies</a>
+      </div>
+      <!-- Europe -->
+      <div class="location-card" data-cont="Europe">
+        <div class="loc-flag">🇬🇧</div>
+        <h3>United Kingdom</h3>
+        <p class="loc-hub">Continental Hub — Europe</p>
+        <div class="loc-cities"><span>London</span><span>Manchester</span><span>Birmingham</span></div>
+        <a href="#" class="btn btn-outline">View Assemblies</a>
+      </div>
+      <!-- Asia -->
+      <div class="location-card" data-cont="Asia">
+        <div class="loc-flag">🇮🇳</div>
+        <h3>India</h3>
+        <p class="loc-hub">Continental Hub — South Asia</p>
+        <div class="loc-cities"><span>Mumbai</span><span>Delhi</span><span>Bangalore</span></div>
+        <a href="#" class="btn btn-outline">View Assemblies</a>
+      </div>
+      <!-- Australia -->
+      <div class="location-card" data-cont="Australia">
+        <div class="loc-flag">🇦🇺</div>
+        <h3>Australia</h3>
+        <p class="loc-hub">Continental Hub — Oceania</p>
+        <div class="loc-cities"><span>Sydney</span><span>Melbourne</span><span>Brisbane</span></div>
+        <a href="#" class="btn btn-outline">View Assemblies</a>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="locations-cta shield-card">
+      <h2>Don't see your city?</h2>
+      <p>Help us plant a CRM assembly in your area. Contact the Global Council.</p>
+      <a href="#" class="btn btn-primary">Request a Church Plant</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+document.querySelectorAll('.cont-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.cont-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const cont = tab.dataset.cont;
+    document.querySelectorAll('.location-card').forEach(card => {
+      card.style.display = (cont === 'all' || card.dataset.cont === cont) ? '' : 'none';
+    });
+  });
+});
+</script>
+{% endblock %}

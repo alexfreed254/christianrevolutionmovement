@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Christ Revolution Movement{% endblock %} | CRM</title>
+  <meta name="description" content="Christ Revolution Movement — Disciple 2 Billion Souls by 2033" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=Oswald:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml" />
+</head>
+<body>
+  <!-- Radiant Cross Background Glow -->
+  <div class="radiant-bg"></div>
+
+  <!-- Navigation -->
+  <nav class="nav shield-nav">
+    <div class="nav-inner">
+      <a href="/" class="logo">
+        <div class="logo-cross">✟</div>
+        <div class="logo-text">
+          <span class="logo-christ">CHRIST</span>
+          <span class="logo-rev">REVOLUTION</span>
+          <span class="logo-mov">MOVEMENT</span>
+        </div>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="/live" class="nav-link live-link">
+          <span class="live-dot"></span> LIVE
+        </a>
+        <a href="/media" class="nav-link">Media</a>
+        <a href="/locations" class="nav-link">Locations</a>
+        <a href="/give" class="nav-link">Give</a>
+        <a href="/portal" class="nav-link">My Portal</a>
+        <a href="/login" class="btn btn-ghost" id="loginBtn">Sign In</a>
+        <a href="/register" class="btn btn-primary">Join the Movement</a>
+      </div>
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">☰</button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="logo-cross large">✟</div>
+        <p class="vision">Disciple 2 Billion Souls by 2033</p>
+        <p class="tagline">A global Jesus movement — undiluted gospel, unshakable faith.</p>
+      </div>
+      <div class="footer-grid">
+        <div>
+          <h4>Connect</h4>
+          <a href="/live">Live Services</a>
+          <a href="/locations">Find a Location</a>
+          <a href="/media">Media Library</a>
+        </div>
+        <div>
+          <h4>Grow</h4>
+          <a href="/portal">My Portal</a>
+          <a href="/portal#growth">Growth Track</a>
+          <a href="/portal#groups">Small Groups</a>
+        </div>
+        <div>
+          <h4>Give</h4>
+          <a href="/give">Tithes & Offerings</a>
+          <a href="/give#missions">Missions</a>
+          <a href="/give#welfare">Welfare</a>
+        </div>
+        <div>
+          <h4>Central Command</h4>
+          <a href="/admin">Admin Portal</a>
+          <a href="#">Global Council</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Christ Revolution Movement. All nations. All glory to Christ.</p>
+    </div>
+  </footer>
+
+  <script src="/static/js/app.js"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

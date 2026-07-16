@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}Live Service{% endblock %}
+{% block content %}
+<section class="live-section">
+  <div class="container">
+    <div class="live-header">
+      <span class="live-badge"><span class="live-dot"></span> LIVE NOW</span>
+      <h1>Global Sunday Service</h1>
+      <p>Worship with believers from 184+ nations</p>
+    </div>
+
+    <div class="live-layout">
+      <!-- Video Player -->
+      <div class="live-player-wrap shield-card">
+        <div class="live-player" id="player">
+          <video id="video" controls autoplay poster="/static/img/poster.jpg">
+            <source src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" type="application/vnd.apple.mpegurl" />
+          </video>
+        </div>
+        <div class="player-controls">
+          <div class="language-selector">
+            <label>🌐 Language:</label>
+            <select id="langSelect">
+              <option value="en">English</option>
+              <option value="sw">Kiswahili</option>
+              <option value="fr">Français</option>
+              <option value="pt">Português</option>
+              <option value="es">Español</option>
+              <option value="ar">العربية</option>
+              <option value="zh">中文</option>
+            </select>
+          </div>
+          <div class="caption-toggle">
+            <label><input type="checkbox" id="captionsOn" checked /> Closed Captions</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat / Prayer Panel -->
+      <aside class="live-chat shield-card">
+        <div class="chat-tabs">
+          <button class="chat-tab active" data-tab="chat">Live Chat</button>
+          <button class="chat-tab" data-tab="prayer">Prayer Wall</button>
+        </div>
+        <div class="chat-body" id="chatBody">
+          <div class="chat-messages" id="chatMessages">
+            <div class="chat-msg"><strong>Pastor J.</strong> Welcome to the global family! 🙏</div>
+            <div class="chat-msg"><strong>Maria (Brazil)</strong> Glória a Deus! 🇧🇷</div>
+            <div class="chat-msg"><strong>John (Kenya)</strong> Asante Yesu! 🇰🇪</div>
+          </div>
+        </div>
+        <form class="chat-input" id="chatForm">
+          <input type="text" id="chatInput" placeholder="Share a word..." />
+          <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+      </aside>
+    </div>
+
+    <!-- Service Info -->
+    <div class="service-info">
+      <div class="info-card">
+        <h3>📅 Weekly Schedule</h3>
+        <ul>
+          <li><strong>Sunday</strong> — Global Service (all languages)</li>
+          <li><strong>Wednesday</strong> — Midweek Prayer & Word</li>
+          <li><strong>Friday</strong> — Midweek Revival</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>🌍 AI Translation</h3>
+        <p>Real-time speech-to-text and translation into 50+ languages. Select your language above.</p>
+      </div>
+      <div class="info-card">
+        <h3>📱 Watch Anywhere</h3>
+        <p>Install as a PWA on your phone for offline access to past services.</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+// HLS Player
+const video = document.getElementById('video');
+if (Hls.isSupported()) {
+  const hls = new Hls();
+  hls.loadSource(video.querySelector('source').src);
+  hls.attachMedia(video);
+}
+// Chat tabs
+document.querySelectorAll('.chat-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.chat-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+  });
+});
+// Chat send
+document.getElementById('chatForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const input = document.getElementById('chatInput');
+  if (!input.value.trim()) return;
+  const msg = document.createElement('div');
+  msg.className = 'chat-msg';
+  msg.innerHTML = `<strong>You</strong> ${input.value}`;
+  document.getElementById('chatMessages').appendChild(msg);
+  input.value = '';
+});
+</script>
+{% endblock %}

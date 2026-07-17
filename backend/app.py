@@ -444,9 +444,28 @@ def handle_stream_reaction(data):
 @app.route('/<path:path>')
 def serve_frontend(path):
     """Serve React frontend"""
-    if path and Path(app.static_folder, path).exists():
-        return send_from_directory(app.static_folder, path)
-    return send_from_directory(app.static_folder, 'index.html')
+    try:
+        # Try to serve static files
+        if path and path != "":
+            static_path = Path(app.static_folder) / path
+            if static_path.exists() and static_path.is_file():
+                return send_from_directory(app.static_folder, path)
+        
+        # Serve index.html for all other routes (SPA routing)
+        index_path = Path(app.static_folder) / 'index.html'
+        if index_path.exists():
+            return send_from_directory(app.static_folder, 'index.html')
+        else:
+            # Frontend not built yet - show helpful message
+            return jsonify({
+                'error': 'Frontend not built',
+                'message': 'React frontend build not found. Run: cd frontend && npm run build',
+                'api_status': 'ok',
+                'api_docs': '/api/health'
+            }), 503
+    except Exception as e:
+        print(f"Frontend serve error: {e}")
+        return jsonify({'error': str(e)}), 500
 
 # ==================== Error Handlers ====================
 

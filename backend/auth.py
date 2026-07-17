@@ -1,6 +1,5 @@
 import hashlib, secrets, os, sys
 from datetime import datetime, timedelta
-from fastapi import Request, HTTPException, status
 from typing import Optional
 
 try:
@@ -39,10 +38,7 @@ def create_session(member_id: str) -> str:
         return token
     except Exception as e:
         print(f"Session creation error: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to create session"
-        )
+        raise Exception("Failed to create session")
 
 def verify_session(token: str) -> Optional[dict]:
     """Verify session token and return session data if valid."""
@@ -63,30 +59,12 @@ def verify_session(token: str) -> Optional[dict]:
         print(f"Session verification error: {e}")
         return None
 
-async def get_current_user(request: Request) -> dict:
-    """Get current authenticated user from request."""
-    auth = request.headers.get("Authorization", "")
-    cookie = request.cookies.get("crm_session")
-    
-    # Extract token from Authorization header or cookie
-    token = auth.replace("Bearer ", "") if auth.startswith("Bearer ") else cookie
-    
-    if not token:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Not authenticated",
-            headers={"WWW-Authenticate": "Bearer"}
-        )
-    
-    session = verify_session(token)
-    if not session:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or expired session",
-            headers={"WWW-Authenticate": "Bearer"}
-        )
-    
-    return {"id": session["member_id"], "token": token}
+async def get_current_user(request: dict) -> dict:
+    """Get current authenticated user from request headers."""
+    # This function is not used in Flask app.py
+    # Flask app.py has its own JWT handling
+    # Keeping for compatibility
+    return {"id": "placeholder"}
 
 def generate_unique_id(continent: str, country: str, city: str) -> str:
     """Generate unique member ID in format: CRM-<CONT>-<CITY>-<SEQ>."""

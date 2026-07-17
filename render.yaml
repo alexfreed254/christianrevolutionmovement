@@ -4,7 +4,13 @@ services:
     env: python
     region: oregon
     plan: starter
-    buildCommand: pip install -r backend/requirements.txt && cd frontend && npm install && npm run build && cd ..
+    buildCommand: |
+      cd backend
+      pip install -r requirements.txt
+      cd ../frontend
+      npm install
+      npm run build
+      cd ..
     startCommand: cd backend && gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:$PORT app:app
     envVars:
       - key: SUPABASE_URL
@@ -17,5 +23,7 @@ services:
         value: production
       - key: PYTHON_VERSION
         value: 3.11.8
+      - key: ALLOWED_ORIGINS
+        value: "*"
     healthCheckPath: /api/health
     autoDeploy: true

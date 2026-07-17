@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 *.so
 .Python
-build/
+# build/ - DON'T ignore all build dirs (frontend needs it)
 develop-eggs/
 dist/
 downloads/

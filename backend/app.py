@@ -489,6 +489,12 @@ def internal_error(error):
 
 # ==================== Run Application ====================
 
+# For gunicorn deployment: gunicorn loads the 'app' object directly
+# The socketio object wraps the Flask app and handles WebSocket routing
+# DO NOT call socketio.run() when using gunicorn - it conflicts with gunicorn's binding
+
 if __name__ == '__main__':
+    # Only for local development (python app.py)
+    # Production uses: gunicorn --worker-class eventlet -w 1 app:app
     port = int(os.environ.get('PORT', 8000))
     socketio.run(app, host='0.0.0.0', port=port, debug=True)

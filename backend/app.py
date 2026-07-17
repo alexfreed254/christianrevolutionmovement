@@ -3,26 +3,26 @@ Christ Revolution Movement (CRM) — Flask API with Real-time Features
 Modern REST API with WebSocket support for live streaming and comments
 """
 
-# CRITICAL: Eventlet monkey patching MUST be first, before any other imports
+# CRITICAL: Eventlet monkey patching MUST be ABSOLUTE FIRST
+# Do NOT import ANYTHING before this
 import eventlet
 eventlet.monkey_patch()
 
+# Now safe to import everything else
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit, join_room, leave_room
-from flask_jwt_extended import (
-    JWTManager, create_access_token, jwt_required, get_jwt_identity
-)
 from datetime import datetime, timedelta
 from typing import Optional
 import os
 import secrets
 from pathlib import Path
 
+# Import supabase client (no Flask context needed)
 from supabase_client import supabase
-from auth import (
-    hash_password, verify_password, generate_unique_id
-)
+
+# Import auth utilities (do NOT import anything that uses Flask context at module level)
+from auth import hash_password, verify_password, generate_unique_id
 
 # Initialize Flask app
 app = Flask(__name__, 
@@ -34,11 +34,16 @@ app.config['SECRET_KEY'] = os.environ.get('SESSION_SECRET', secrets.token_hex(32
 app.config['JWT_SECRET_KEY'] = os.environ.get('SESSION_SECRET', secrets.token_hex(32))
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=30)
 
-# Initialize extensions
+# Initialize CORS and SocketIO first
 ALLOWED_ORIGINS = os.environ.get('ALLOWED_ORIGINS', '*').split(',')
 CORS(app, origins=ALLOWED_ORIGINS, supports_credentials=True)
-jwt = JWTManager(app)
 socketio = SocketIO(app, cors_allowed_origins=ALLOWED_ORIGINS, async_mode='eventlet')
+
+# Import JWT utilities AFTER Flask app is created to avoid circular import issues
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+
+# Initialize JWT AFTER imports
+jwt = JWTManager(app)
 
 # ==================== API Routes ====================
 

@@ -2,6 +2,11 @@
 Christ Revolution Movement (CRM) — Flask API with Real-time Features
 Modern REST API with WebSocket support for live streaming and comments
 """
+
+# CRITICAL: Eventlet monkey patching MUST be first, before any other imports
+import eventlet
+eventlet.monkey_patch()
+
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit, join_room, leave_room

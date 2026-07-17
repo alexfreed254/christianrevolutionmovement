@@ -72,14 +72,28 @@ def register():
                 return jsonify({'error': f'Missing required field: {field}'}), 400
         
         # Check existing username
-        existing = supabase.table("members").select("id").eq("username", data['username']).execute()
-        if existing.data:
-            return jsonify({'error': 'Username already taken'}), 400
+        try:
+            existing = supabase.table("members").select("id").eq("username", data['username']).execute()
+            if existing.data:
+                return jsonify({'error': 'Username already taken'}), 400
+        except Exception as db_error:
+            print(f"Database check error (username): {db_error}")
+            return jsonify({
+                'error': 'Database connection failed',
+                'details': 'Could not check if username exists. Please ensure database is set up correctly.'
+            }), 500
         
         # Check existing email
-        existing_email = supabase.table("members").select("id").eq("email", data['email']).execute()
-        if existing_email.data:
-            return jsonify({'error': 'Email already registered'}), 400
+        try:
+            existing_email = supabase.table("members").select("id").eq("email", data['email']).execute()
+            if existing_email.data:
+                return jsonify({'error': 'Email already registered'}), 400
+        except Exception as db_error:
+            print(f"Database check error (email): {db_error}")
+            return jsonify({
+                'error': 'Database connection failed',
+                'details': 'Could not check if email exists. Please ensure database is set up correctly.'
+            }), 500
         
         # Generate unique ID and hash password
         unique_id = generate_unique_id(data['continent'], data['country'], data['city'])
@@ -105,21 +119,39 @@ def register():
             "timezone": "UTC"
         }
         
-        result = supabase.table("members").insert(member).execute()
-        member_data = result.data[0]
-        member_data.pop('password_hash', None)
-        
-        # Create JWT token
-        token = create_access_token(identity=member_data['id'])
-        
-        return jsonify({
-            'token': token,
-            'member': member_data
-        }), 201
+        try:
+            result = supabase.table("members").insert(member).execute()
+            if not result.data:
+                return jsonify({
+                    'error': 'Registration failed',
+                    'details': 'Could not insert member record. Please check database schema.'
+                }), 500
+                
+            member_data = result.data[0]
+            member_data.pop('password_hash', None)
+            
+            # Create JWT token
+            token = create_access_token(identity=member_data['id'])
+            
+            return jsonify({
+                'token': token,
+                'member': member_data
+            }), 201
+        except Exception as insert_error:
+            print(f"Database insert error: {insert_error}")
+            return jsonify({
+                'error': 'Registration failed',
+                'details': f'Could not create member account: {str(insert_error)}'
+            }), 500
         
     except Exception as e:
         print(f"Registration error: {e}")
-        return jsonify({'error': 'Registration failed'}), 500
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'error': 'Registration failed',
+            'details': str(e)
+        }), 500
 
 @app.route('/api/login', methods=['POST'])
 def login():

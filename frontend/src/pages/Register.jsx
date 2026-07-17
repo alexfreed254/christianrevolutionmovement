@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { UserPlus, Loader } from 'lucide-react';
+import { UserPlus, Loader, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const Register = () => {
@@ -17,6 +17,7 @@ const Register = () => {
     confirmPassword: ''
   });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const continents = ['Africa', 'Asia', 'Europe', 'North America', 'South America', 'Oceania'];
@@ -26,13 +27,22 @@ const Register = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
+    setError(''); // Clear error on input change
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
 
     if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
       toast.error('Passwords do not match');
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters');
+      toast.error('Password must be at least 6 characters');
       return;
     }
 
@@ -56,28 +66,44 @@ const Register = () => {
         toast.success('Registration successful! Welcome to CRM!');
         navigate('/portal');
       } else {
-        toast.error(data.error || 'Registration failed');
+        const errorMessage = data.details || data.error || 'Registration failed';
+        setError(errorMessage);
+        toast.error(errorMessage);
+        console.error('Registration error:', data);
       }
     } catch (error) {
       console.error('Registration error:', error);
-      toast.error('Failed to register. Please try again.');
+      const errorMessage = 'Failed to connect to server. Please try again.';
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-red-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-crm-purple-lighter via-white to-crm-purple-lighter py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-2xl p-8">
+        <div className="bg-white rounded-2xl shadow-2xl p-8 border border-crm-purple/10">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-gradient-to-br from-red-600 to-red-800 rounded-full flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4">
+            <div className="w-16 h-16 bg-gradient-to-br from-crm-purple to-crm-purple-dark rounded-full flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4 glow-purple">
               C
             </div>
-            <h2 className="text-3xl font-bold text-gray-900">Join the Movement</h2>
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-crm-purple-dark to-crm-purple bg-clip-text text-transparent">Join the Movement</h2>
             <p className="text-gray-600 mt-2">Create your account and start your journey</p>
           </div>
+
+          {/* Error Alert */}
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start space-x-3">
+              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="text-sm font-medium text-red-800">Registration Error</p>
+                <p className="text-sm text-red-700 mt-1">{error}</p>
+              </div>
+            </div>
+          )}
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -93,7 +119,7 @@ const Register = () => {
                   required
                   value={formData.full_name}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-crm-purple focus:border-transparent transition"
                   placeholder="John Doe"
                 />
               </div>
@@ -108,7 +134,7 @@ const Register = () => {
                   required
                   value={formData.continent}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-crm-purple focus:border-transparent transition"
                 >
                   <option value="">Select Continent</option>
                   {continents.map(c => (
@@ -128,7 +154,7 @@ const Register = () => {
                   required
                   value={formData.country}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-crm-purple focus:border-transparent transition"
                   placeholder="Kenya"
                 />
               </div>
@@ -144,7 +170,7 @@ const Register = () => {
                   required
                   value={formData.city}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-crm-purple focus:border-transparent transition"
                   placeholder="Nairobi"
                 />
               </div>
@@ -159,7 +185,7 @@ const Register = () => {
                   type="text"
                   value={formData.village}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-crm-purple focus:border-transparent transition"
                   placeholder="Optional"
                 />
               </div>
@@ -175,7 +201,7 @@ const Register = () => {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-crm-purple focus:border-transparent transition"
                   placeholder="john@example.com"
                 />
               </div>
@@ -191,7 +217,7 @@ const Register = () => {
                   required
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-crm-purple focus:border-transparent transition"
                   placeholder="+254712345678"
                 />
               </div>
@@ -207,7 +233,7 @@ const Register = () => {
                   required
                   value={formData.username}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-crm-purple focus:border-transparent transition"
                   placeholder="johndoe"
                 />
               </div>
@@ -215,15 +241,16 @@ const Register = () => {
               {/* Password */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Password *
+                  Password * (min 6 characters)
                 </label>
                 <input
                   name="password"
                   type="password"
                   required
+                  minLength="6"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-crm-purple focus:border-transparent transition"
                   placeholder="••••••••"
                 />
               </div>
@@ -237,9 +264,10 @@ const Register = () => {
                   name="confirmPassword"
                   type="password"
                   required
+                  minLength="6"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-crm-purple focus:border-transparent transition"
                   placeholder="••••••••"
                 />
               </div>
@@ -248,7 +276,7 @@ const Register = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center space-x-2 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center space-x-2 px-6 py-3 bg-gradient-to-r from-crm-purple to-crm-purple-dark text-white rounded-lg hover:shadow-lg hover:scale-105 transition-all duration-300 font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 glow-purple"
             >
               {loading ? (
                 <>
@@ -268,7 +296,7 @@ const Register = () => {
           <div className="mt-6 text-center">
             <p className="text-gray-600">
               Already have an account?{' '}
-              <Link to="/login" className="text-red-600 hover:text-red-700 font-semibold">
+              <Link to="/login" className="text-crm-purple hover:text-crm-purple-dark font-semibold transition">
                 Sign In
               </Link>
             </p>

@@ -15,7 +15,7 @@ body {
   @apply bg-gray-50 text-gray-900;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - CRM Purple Theme */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -26,40 +26,42 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-gray-400 rounded-full;
+  @apply bg-crm-purple rounded-full;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-500;
+  @apply bg-crm-purple-dark;
 }
 
-/* Video.js custom styling */
+/* Video.js custom styling - CRM Purple */
 .video-js {
   font-family: 'Inter', sans-serif;
 }
 
 .video-js .vjs-big-play-button {
-  @apply border-2 border-white/20 rounded-full;
-  background: rgba(0, 0, 0, 0.5);
+  @apply border-2 border-crm-purple-light rounded-full;
+  background: rgba(155, 127, 217, 0.3);
   backdrop-filter: blur(10px);
 }
 
 .video-js .vjs-big-play-button:hover {
-  @apply bg-primary-600;
+  @apply bg-crm-purple;
 }
 
-/* Live indicator */
-@keyframes pulse-red {
+/* Live indicator - Purple glow */
+@keyframes pulse-purple {
   0%, 100% {
     opacity: 1;
+    box-shadow: 0 0 10px rgba(155, 127, 217, 0.8);
   }
   50% {
-    opacity: 0.5;
+    opacity: 0.6;
+    box-shadow: 0 0 20px rgba(155, 127, 217, 1);
   }
 }
 
 .live-indicator {
-  animation: pulse-red 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation: pulse-purple 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 /* Smooth transitions */
@@ -67,28 +69,39 @@ body {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Glass morphism effect */
+/* Glass morphism effect - Purple tint */
 .glass {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
 
 .glass-dark {
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
 
-/* Gradient text */
-.gradient-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-secondary-600;
+.glass-purple {
+  background: rgba(155, 127, 217, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(155, 127, 217, 0.2);
 }
 
-/* Loading spinner */
+/* Gradient text - CRM Purple */
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-crm-purple to-crm-purple-light;
+}
+
+.gradient-text-vertical {
+  @apply bg-clip-text text-transparent bg-gradient-to-b from-crm-purple-dark via-crm-purple to-crm-purple-light;
+}
+
+/* Loading spinner - Purple */
 .spinner {
-  border: 3px solid rgba(0, 0, 0, 0.1);
-  border-left-color: #ef4444;
+  border: 3px solid rgba(155, 127, 217, 0.2);
+  border-left-color: #9B7FD9;
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -99,4 +112,38 @@ body {
   to {
     transform: rotate(360deg);
   }
+}
+
+/* Purple glow effect */
+.glow-purple {
+  box-shadow: 0 0 20px rgba(155, 127, 217, 0.5);
+}
+
+.glow-purple-strong {
+  box-shadow: 0 0 30px rgba(155, 127, 217, 0.8), 0 0 60px rgba(155, 127, 217, 0.4);
+}
+
+/* Hover effects */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(155, 127, 217, 0.3);
+}
+
+/* Button styles */
+.btn-primary {
+  @apply bg-crm-purple hover:bg-crm-purple-dark text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300;
+  box-shadow: 0 4px 14px rgba(155, 127, 217, 0.4);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 6px 20px rgba(155, 127, 217, 0.6);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  @apply bg-crm-purple-lighter hover:bg-crm-purple-light text-crm-purple-dark font-semibold py-3 px-6 rounded-lg transition-all duration-300;
 }

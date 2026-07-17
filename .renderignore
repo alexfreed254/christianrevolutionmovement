@@ -1,0 +1,45 @@
+# Files to ignore during Render deployment
+
+# Development files
+.env
+.env.local
+*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Tests
+tests/
+**/__tests__/
+*.test.py
+*.spec.py
+
+# Documentation (optional - remove if you want docs deployed)
+# CONTRIBUTING.md
+# CHECKLIST.md
+
+# Git
+.git/
+.gitignore
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Development scripts
+setup.sh
+setup.bat
+
+# CI/CD (already used before deployment)
+.github/

@@ -1,0 +1,28 @@
+{
+  "name": "christ-revolution-movement",
+  "version": "1.0.0",
+  "description": "Disciple 2 Billion Souls by 2033",
+  "scripts": {
+    "install:backend": "pip install -r backend/requirements.txt",
+    "install:frontend": "cd frontend && npm install",
+    "install:all": "npm run install:backend && npm run install:frontend",
+    "dev:backend": "cd backend && python app.py",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build:frontend": "cd frontend && npm run build",
+    "start:prod": "cd backend && gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:8000 app:app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/christ-revolution-movement.git"
+  },
+  "keywords": [
+    "church",
+    "ministry",
+    "discipleship",
+    "live-streaming",
+    "react",
+    "flask"
+  ],
+  "author": "Christ Revolution Movement",
+  "license": "MIT"
+}

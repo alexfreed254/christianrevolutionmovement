@@ -1,0 +1,64 @@
+# Docker ignore file (for future Docker deployment)
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# Environment files
+.env
+.env.local
+*.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Documentation
+*.md
+!README.md
+docs/
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+
+# Logs
+*.log
+logs/
+
+# Testing
+tests/
+.pytest_cache/
+.coverage
+
+# Development scripts
+setup.sh
+setup.bat
+start_dev.sh
+start_dev.bat
+
+# Render specific
+.render/
+.renderignore
+render.yaml
+
+# Other
+Thumbs.db
+.DS_Store

@@ -2,9 +2,10 @@ services:
   - type: web
     name: crm-central-command
     env: python
-    plan: standard
-    buildCommand: pip install -r backend/requirements.txt
-    startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
+    region: oregon
+    plan: starter
+    buildCommand: pip install -r backend/requirements.txt && cd frontend && npm install && npm run build && cd ..
+    startCommand: cd backend && gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:$PORT app:app
     envVars:
       - key: SUPABASE_URL
         sync: false
@@ -12,4 +13,9 @@ services:
         sync: false
       - key: SESSION_SECRET
         generateValue: true
+      - key: ENVIRONMENT
+        value: production
+      - key: PYTHON_VERSION
+        value: 3.11.8
     healthCheckPath: /api/health
+    autoDeploy: true

@@ -18,18 +18,34 @@ from auth import (
     verify_session, get_current_user, generate_unique_id
 )
 
+# Path handling for different deployment environments
+import pathlib
+BASE_DIR = pathlib.Path(__file__).parent.parent
+STATIC_DIR = BASE_DIR / "frontend" / "static"
+TEMPLATES_DIR = BASE_DIR / "frontend" / "templates"
+
 # ---------- App Setup ----------
-app = FastAPI(title="CRM Central Command", version="1.0.0")
+app = FastAPI(
+    title="CRM Central Command",
+    version="1.0.0",
+    description="Christ Revolution Movement - Disciple 2 Billion Souls by 2033",
+    docs_url="/api/docs",
+    redoc_url="/api/redoc"
+)
+
+# CORS configuration - restrict in production
+ALLOWED_ORIGINS = os.environ.get("ALLOWED_ORIGINS", "*").split(",")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-app.mount("/static", StaticFiles(directory="../frontend/static"), name="static")
-templates = Jinja2Templates(directory="../frontend/templates")
+app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 
 # ---------- Models ----------
 class RegisterData(BaseModel):
